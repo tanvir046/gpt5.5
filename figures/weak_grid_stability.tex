@@ -1,0 +1,10 @@
+\begin{tikzpicture}[font=\small,>=Latex]
+\draw[->] (0,0)--(5.5,0) node[right]{frequency};
+\draw[->] (0,-2.2)--(0,2.2) node[above]{loop gain};
+\draw[thick,blue] plot[smooth] coordinates{(0.2,1.5)(1.0,1.0)(1.8,0.3)(2.6,-0.2)(3.4,-0.8)(4.6,-1.5)};
+\draw[dashed] (0,-1)--(5,-1) node[right]{$-180^\circ$};
+\draw[dashed] (2.55,-2.0)--(2.55,1.0);
+\node[align=center] at (3.9,1.1){weak grids reduce\\phase and gain margins};
+\draw[->,red,thick] (2.55,-1) -- (2.55,-0.22);
+\node[right,red] at (2.55,-0.6){margin};
+\end{tikzpicture}
