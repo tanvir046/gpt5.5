@@ -1,0 +1,11 @@
+\begin{tikzpicture}[font=\small,>=Latex,node distance=1.1cm]
+\tikzstyle{simstep}=[draw,rounded corners,align=center,minimum width=2.2cm,minimum height=0.8cm,fill=gray!8]
+\node[simstep] (init) {initialize\\steady state};
+\node[simstep,right=of init] (stamp) {stamp network\\and controls};
+\node[simstep,right=of stamp] (solve) {solve at\\$t+\Delta t$};
+\node[simstep,right=of solve] (check) {check events\\and limits};
+\draw[->,thick] (init)--(stamp);
+\draw[->,thick] (stamp)--(solve);
+\draw[->,thick] (solve)--(check);
+\draw[->,thick] (check.south) to[bend left=30] node[below]{advance time} (stamp.south);
+\end{tikzpicture}

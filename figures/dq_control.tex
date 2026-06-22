@@ -1,0 +1,15 @@
+\begin{tikzpicture}[font=\small,>=Latex,node distance=1.0cm]
+\tikzstyle{blk}=[draw,rounded corners,minimum width=1.85cm,minimum height=0.8cm,align=center,fill=blue!5]
+\node[blk] (pll) {PLL\\$\theta$};
+\node[blk,right=of pll] (abc) {$abc\to dq$};
+\node[blk,right=of abc] (outer) {outer\\$P,Q,V$};
+\node[blk,right=of outer] (inner) {current\\PI loops};
+\node[blk,right=of inner] (pwm) {PWM};
+\node[blk,right=of pwm] (plant) {converter\\and grid};
+\draw[->,thick] (pll)--(abc);
+\draw[->,thick] (abc)--(outer);
+\draw[->,thick] (outer)--(inner);
+\draw[->,thick] (inner)--(pwm);
+\draw[->,thick] (pwm)--(plant);
+\draw[->,dashed] (plant.south) to[bend left=30] node[below]{measured $v,i$} (pll.south);
+\end{tikzpicture}

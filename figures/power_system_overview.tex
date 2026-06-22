@@ -1,0 +1,13 @@
+\begin{tikzpicture}[font=\small,>=Latex,node distance=1.5cm]
+\tikzstyle{block}=[draw,rounded corners,minimum width=2.3cm,minimum height=0.85cm,align=center,fill=blue!6]
+\node[block] (gen) {Synchronous\\generation};
+\node[block,right=of gen] (xf1) {Step-up\\transformer};
+\node[block,right=of xf1] (line) {Transmission\\line};
+\node[block,right=of line] (xf2) {Substation\\transformer};
+\node[block,right=of xf2] (load) {Loads and\\converters};
+\draw[->,thick] (gen) -- (xf1);
+\draw[->,thick] (xf1) -- (line);
+\draw[->,thick] (line) -- (xf2);
+\draw[->,thick] (xf2) -- (load);
+\draw[->,dashed] (load.south) to[bend left=35] node[below]{measure, protect, control} (gen.south);
+\end{tikzpicture}

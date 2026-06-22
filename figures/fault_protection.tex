@@ -1,0 +1,15 @@
+\begin{tikzpicture}[font=\small,>=Latex]
+\draw[thick] (0,0) -- (8.5,0);
+\foreach \x/\lab in {0.6/Bus A,4.1/Line,8.0/Bus B}{\draw[thick] (\x,-0.35)--(\x,0.35);\node[above] at (\x,0.35){\lab};}
+\draw[fill=red!20,draw=red,thick] (5.7,0) circle (0.22);
+\node[below=0.35cm] at (5.7,0) {fault};
+\draw[->,very thick,red] (0.8,0.45) -- node[above]{fault current} (5.35,0.45);
+\draw[->,very thick,red] (7.8,-0.45) -- (6.05,-0.45);
+\node[draw,rounded corners,fill=yellow!15] at (2.1,-1.0) {CT/PT};
+\node[draw,rounded corners,fill=green!10] at (4.1,-1.0) {relay logic};
+\node[draw,rounded corners,fill=orange!15] at (6.2,-1.0) {breaker trip};
+\draw[->] (2.1,-0.6)--(2.1,-0.1);
+\draw[->] (2.85,-1.0)--(3.35,-1.0);
+\draw[->] (4.85,-1.0)--(5.45,-1.0);
+\draw[->] (6.2,-0.6)--(6.2,-0.1);
+\end{tikzpicture}

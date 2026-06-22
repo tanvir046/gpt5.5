@@ -1,0 +1,10 @@
+\begin{tikzpicture}[font=\small,>=Latex]
+\draw[->] (0,0) -- (9,0) node[right]{line distance};
+\draw[->] (0,-0.2) -- (0,2.6) node[above]{voltage};
+\draw[thick,blue] (0,0.4) -- (1.4,0.4) -- (1.4,1.8) -- (4.8,1.8) -- (4.8,0.8) -- (8.3,0.8);
+\draw[->,blue,thick] (2.2,2.1) -- node[above]{incident wave} (3.5,2.1);
+\draw[->,red,thick] (5.2,1.35) -- node[above]{reflected wave} (6.5,1.35);
+\draw[dashed] (4.8,0) -- (4.8,2.3);
+\node[below] at (4.8,0){termination};
+\node[align=center] at (7.1,2.15){step change travels at\\$v\approx 1/\sqrt{LC}$};
+\end{tikzpicture}
