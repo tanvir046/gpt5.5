@@ -1,10 +1,8 @@
 \documentclass[11pt]{article}
 \usepackage[margin=0.8in]{geometry}
 \usepackage{amsmath}
-\usepackage{enumitem}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\setlist[enumerate]{leftmargin=0pt,itemindent=1.5em,label=\textbf{\arabic*.},itemsep=0.8em}
 \title{Practical Electrical Engineering Interview Questions}
 \author{}
 \date{}
@@ -13,6 +11,8 @@
 \noindent This collection emphasizes safe, practical reasoning. In every measurement scenario, confirm ratings, use appropriately rated probes and PPE, and de-energize equipment when possible.
 
 \begin{enumerate}
+\renewcommand{\labelenumi}{\textbf{\arabic{enumi}.}}
+\setlength{\itemsep}{0.8em}
 \item \textbf{You must measure 50 V, but your meter's maximum range is 10 V. What do you do?}\\
 Use a correctly rated voltage divider or a rated high-voltage probe so the meter sees no more than 10 V. For example, a 4:1 divider gives $V_\mathrm{meter}=V_\mathrm{in}/5=10$ V at 50 V; account for divider tolerance and meter input impedance. Do not exceed the meter or probe voltage rating.
 
