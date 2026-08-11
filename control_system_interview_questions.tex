@@ -80,7 +80,7 @@ Because of fundamental sensitivity constraints, reducing sensitivity strongly in
 It shows how closed-loop poles move as a scalar loop gain changes. Use it to assess stability ranges, damping, and approximate gain choices; verify the resulting transient and frequency response.
 
 \item \textbf{What is damping ratio?}\\
-For a standard second-order denominator $s^2+2\zeta\omega_ns+\omega_n^2$, $\zeta$ controls oscillation. For $0<\zeta<1$, percent overshoot is approximately $100e^{-\pi\zeta/\sqrt{1-\zeta^2}}$.
+For a standard second-order denominator $s^2+2\zeta\omega_ns+\omega_n^2$, $\zeta$ controls oscillation. For a step input with no finite zeros and $0<\zeta<1$, percent overshoot is approximately $100e^{-\pi\zeta/\sqrt{1-\zeta^2}}$.
 
 \item \textbf{What is natural frequency?}\\
 In the same second-order model, $\omega_n$ sets the basic time scale. It is not automatically the closed-loop bandwidth when zeros, higher-order modes, delays, or nonlinear limits are important.
