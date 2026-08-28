@@ -1,0 +1,17 @@
+\contentsline {section}{\numberline {1}Where PMSM Knowledge Transfers}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}The correct comparison}{2}{subsection.1.1}%
+\contentsline {section}{\numberline {2}Three-Phase Inverter Hardware}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Voltage-source inverter and PWM}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}DC link, switching losses, and thermal path}{3}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Output filters and sensing}{3}{subsection.2.3}%
+\contentsline {section}{\numberline {3}PMSM Model and Field-Oriented Control}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Reference-frame transformations}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}PMSM $dq$ equations and torque}{4}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Current-loop implementation}{4}{subsection.3.3}%
+\contentsline {section}{\numberline {4}From FOC to Grid-Following Inverters}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}PLL and $dq$ power control}{5}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Current priorities during faults}{5}{subsection.4.2}%
+\contentsline {section}{\numberline {5}Grid-Forming Control and Plant Integration}{5}{section.5}%
+\contentsline {section}{\numberline {6}Protection, Power Quality, and Validation}{6}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Protection and ride-through}{6}{subsection.6.1}%
+\contentsline {section}{\numberline {7}Focused Study Plan}{7}{section.7}%

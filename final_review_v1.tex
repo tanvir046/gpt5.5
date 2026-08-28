@@ -1,0 +1,461 @@
+%This is a template file for use of iopjournal.cls
+
+\documentclass[fleqn,10pt]{wlscirep}
+\usepackage{amsmath}
+\usepackage{ragged2e}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{siunitx}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{subcaption}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{wrapfig}
+\title{Microelectrode Geometry Governs Micromotion-induced Tissue Strain at the Brain-Implant Interface}
+
+\author[1]{Rubiya Yasmin}
+\author[1]{Yupeng Wu}
+\author[2,3,4]{Benjamin Aleman}
+\author[1,*]{Felix Deku}
+
+\affil[1]{Department of Bioengineering, University of Oregon, Eugene, OR, United States of America}
+\affil[2]{Department of Physics, University of Oregon, Eugene, OR 97403, USA}
+\affil[3]{Materials Science Institute, University of Oregon, Eugene, OR 97403, USA}
+\affil[4]{Center for Optical, Molecular, and Quantum Science, University of Oregon, Eugene, OR 97403, USA}
+
+\affil[*]{fdeku@uoregon.edu}
+
+\keywords{microelectrode arrays, finite element modelling, neural interface, tissue strain, implant geometry, micromotion}
+
+\begin{abstract}
+
+
+Intracortical microelectrode arrays (MEAs) are widely deployed for high-fidelity neural recording in clinical brain--computer interface (BCI) systems and in fundamental neurophysiology studies. Their clinical relevance continues to grow with emerging therapeutic applications in Parkinson's disease and locked-in syndrome. However, the long-term reliability of chronic MEAs remains limited by progressive signal degradation, declining signal-to-noise ratio (SNR), and instability of neural recordings over time. These failures are driven, in part, by the foreign body response (FBR) at the implant--tissue interface, which initiates a cascade of neuroinflammatory events culminating in reactive gliosis, glial encapsulation, and ultimately implant failure. Existing engineering approaches to mitigate these issues have emphasized using low modulus structural materials to reduce the mechanical mismatch between the implant and brain tissue, and modification of surface chemistry to attenuate inflammatory activation to improve chronic stability. However, these strategies largely overlook the critical influence of MEA geometric footprint, specifically the combined influence of shank length, width, and thickness on the initiation and progression of neuroinflammation.
+
+Here, we systematically investigated the interactive effects of MEA shank length, width, thickness, material modulus, and micromotion displacement on brain tissue strain using finite element modeling (FEM). The reduced regression model accounted for approximately 98\% of the variation in the simulated strain responses ($R^2=0.98$, $p<0.0001$). We report that increasing shank length significantly decreased mechanical strain, while increasing probe width and thickness significantly increased strain within the investigated parameter range. Although the estimated main-effect change was numerically larger for width than for thickness, these effect magnitudes were not directly compared statistically. Interaction analyses revealed that the effects of width, thickness, and stiffness depend on length, with increasing width and thickness producing substantially greater strain increases for short probes ($L=1~\mathrm{mm}$) than for long probes ($L=5~\mathrm{mm}$). The strain-reducing effect of increased shank length was most pronounced under the low-displacement condition ($D=1~\mu\mathrm{m}$), while the effect of material stiffness also depended on shank length.
+
+These results show that shank length, width, thickness, material properties, and micromotion jointly govern tissue strain through significant main effects and interaction-dependent responses. Rather than supporting universally favorable probe dimensions or material properties, the results indicate that design recommendations are conditional on the geometric configuration and micromotion condition. Within the investigated parameter space, narrower and thinner geometries provided the greatest strain reductions in specific length-dependent configurations, while longer probes showed their greatest strain reduction under low-displacement loading. Collectively, this work provides a novel quantitative framework for identifying probe geometries that minimize mechanical strain and associated neuroimmune activation, thereby supporting improved long-term performance of implanted neural devices.
+
+
+
+\textbf{Keywords:} Microelectrode arrays, Foreign body response, Finite element analysis, Intracortical implants, Design of Experiments.
+
+
+\end{abstract}
+
+
+
+\begin{document}
+
+\flushbottom
+\maketitle
+% * <john.hammersley@gmail.com> 2015-02-09T12:07:31.197Z:
+%
+%  Click the title above to edit the author information and abstract
+%
+\thispagestyle{empty}
+
+%\noindent Please note: Abbreviations should be introduced at the first mention in the main text – no abbreviations lists. Suggested structure of main text (not enforced) is provided below.
+
+\section{Introduction}
+\justifying
+
+
+
+
+Implanted microelectrode arrays (MEAs) are widely used in neuroscience for high-resolution recording of neural activity, enabling detailed investigation of neural circuit dynamics and information processing. These devices support single-unit and multi-unit recordings and have contributed to advances in understanding neural encoding, learning, and brain plasticity. Clinically, MEAs are integral to brain--machine interfaces, enabling restoration of motor and communication functions in patients with severe neurological disorders such as locked-in syndrome and Parkinson's disease \cite{Bacher2015, Vansteensel2020, Milekovic2018, Mokienko2024}. Advances in high-channel-count MEA technologies have expanded their use in both research and clinical settings. However, the long-term utility of these devices remains a major concern, as reliable chronic performance is essential for studying brain adaptability and learning-related neural reorganization involving changes in neural connectivity and activity patterns over time \cite{Hara2016, Lutcke2013}.
+
+Despite their functionality, chronic implantation of MEAs faces significant challenges, including signal degradation, reduced signal-to-noise ratio (SNR), and recording  \cite{Dunlap2020}. A critical factor limiting long-term performance is the foreign body response, which encompasses activation of glial cells and inflammatory cascades around the implant \cite{Dunlap2020, Ferguson2019, Salatino2017, Jorfi2015}. Because mechanical strain and chronic tissue disruption contribute to this response, implant designs must balance electrical performance with strategies that minimize tissue damage and immune activation \cite{Kozai2015, Subbaroyan2005, AlAbed2022}.
+
+Mechanical strain at the implant--tissue interface arises from several coupled factors, including the geometric footprint of the penetrating shank and the mechanical properties of the implant material. This mechanical strain is further amplified by micromotion, defined as the small relative displacement between the implant and surrounding tissue caused by physiological processes such as vascular and respiratory pulsation \cite{Subbaroyan2005, AlAbed2022, Muthuswamy2005}. Significant progress has been made in evaluating MEA materials \cite{Subbaroyan2005, AlAbed2022} and substrate stiffness \cite{Subbaroyan2005, Sridharan2015} with increasing interest in developing softer materials to reduce induced strain \cite{Subbaroyan2005, AlAbed2022, Sridharan2015, Lee2005, Mahajan2020, Lecomte2018}. However, there remains a limited quantitative understanding of how specific geometric parameters of MEAs, such as shank length, width, and thickness, independently and interactively influence tissue strain and the resulting immune response.
+
+A recent report by Forrest et al. \cite{Forrest2025} demonstrated that the strain induced varies spatially across electrode configurations, with higher strain observed near edges and corner electrodes compared to interior shanks. However, these findings were limited to fixed array architectures, such as Utah arrays, and specific geometries. As a result, a comprehensive understanding of how individual geometric parameters and their combinations influence strain generation remains incomplete. Early work by Seymour and Kipke \cite{Seymour2007} suggested that reducing feature size may reduce astrocytic activation and improve neuronal preservation. However, these findings were also based on a specific lattice architecture and do not fully capture the influence of overall implant geometry or its interaction with mechanical forces and stresses applied to the surrounding tissue. Moreover, subsequent studies have demonstrated that wider but compliant, soft, and thin devices can also achieve improved performance \cite{Vebraite2021, Pimenta2024, Malekoshoaraie2024} indicating that geometry and material properties must be considered together rather than independently. More importantly, these parameters are highly coupled, and their effects on tissue strain cannot be understood through one-factor-at-a-time analyses. Instead, implant performance is governed by the interactions among device dimensions, material properties, and micromotion-induced loading conditions. Addressing this gap requires evaluating how implant geometry influences mechanically induced tissue strain and its implications for immune activation. In particular, understanding how variations in shank width, thickness, and length affect strain magnitude and how these parameters interact to influence chronic stability and recording performance remains unexplored.
+
+Direct experimental evaluation of geometry-dependent tissue responses is essential but can be resource-intensive because it requires long-term implantation and histological analysis. In this context, finite element modeling (FEM) serves as a complementary approach. FEM provides a controlled framework for isolating individual design variables and quantifying their combined effects on tissue deformation, which is difficult to achieve through long-term implantation studies alone.
+
+In this study, we combine a full-factorial design-of-experiments (DOE) framework with three-dimensional finite element modeling to evaluate how implant geometry and material properties influence tissue strain. The model represents the interaction between MEA geometries and cortical rat brain tissue, using shank length, width, thickness, material modulus, and micromotion displacement as inputs and computing the resulting mechanical strain field. We evaluate both individual parameter effects and interactions involving multiple parameters simultaneously to determine how these factors influence strain magnitude and spatial variation.
+
+
+
+
+
+% All sections except suppdata will be removed if the [anonymous] option is used.
+% See iopjournal-guidelines.pdf for more information.
+%
+
+\section{Methods}
+\subsection{Design of Experiments (DOE) Approach}
+
+
+
+The effects of implant shank geometric footprint, material modulus, and brain displacement on mechanical strain in the surrounding tissue were studied using a design-of-experiments (DOE) framework in JMP Pro 18 (SAS Institute Inc., Cary, NC, USA). DOE methodology enables systematic assessment of the effects of input parameters on output responses, allowing both individual and interaction effects to be quantified \cite{Kumar2014, Krishnan2021}.
+
+In this work, the experimental design included five factors: shank length (X1), shank width (X2), shank thickness (X3), elastic modulus of the shank material (X4), and brain displacement (X5). Each factor was evaluated at two levels, corresponding to the minimum and maximum values, to capture a wide but representative parameter range relevant to neural implants \cite{Deku2018, Deku2018a, Kozai2012, Sohal2016, Altuna2013, Harris2011a, Harris2011b, Ware2014, Ward2009, Barrese2013, Wester2009, Sohal2014, Rousche2001}. The factor levels were defined as follows: length, 1--5 mm; width, 1--100 $\mu$m; thickness, 1--100 $\mu$m; elastic modulus, 2--300 GPa; and displacement, 1--50 $\mu$m.
+
+A complete factorial design was used to evaluate all possible combinations of factor values. With five factors at two levels each, the design produced $2^5 = 32$ unique experimental conditions. Table \ref{Table 1} summarizes the resulting design matrix, with each row representing a separate set of simulated input conditions. For each experimental condition, the finite element simulation model was used to calculate the mechanical strain induced in the surrounding brain tissue. In DOE terminology, this output quantity is referred to as the response variable ($Y$).
+
+The relationship between the response and the input factors was initially represented by the following general candidate regression model:
+
+\begin{equation}
+Y=\beta_0+\sum_{i=1}^{5}\beta_iX_i+
+\sum_{i<j}\beta_{ij}X_iX_j+\cdots+
+\beta_{12345}X_1X_2X_3X_4X_5+\varepsilon .
+\tag{1}
+\end{equation}
+
+where $Y$ denotes the strain response obtained from the simulation, $\beta_0$ represents the intercept, $\beta_i$ represents the main effect of each individual factor, and $\beta_{ij}$ and higher-order terms represent interaction effects between factors. Equation~1 describes the general candidate model form for the $2^5$ full-factorial design and was not fitted as a saturated 32-parameter model. Instead, a reduced standard least-squares regression model was fitted to the 32 FEM responses. Model selection was based on the corrected Akaike information criterion (AICc), with the final reduced model having an AICc of 232.01.
+
+The final reduced model retained 22 effects in addition to the intercept, consisting of five main effects, nine two-way interactions, seven three-way interactions, and one four-way interaction. Using $X_1$ = length, $X_2$ = width, $X_3$ = thickness, $X_4$ = modulus, and $X_5$ = displacement, the final fitted model was:
+
+\begin{equation}
+\begin{aligned}
+\log(\mathrm{strain}) ={}& \beta_0+\beta_1X_1+\beta_2X_2+\beta_3X_3+\beta_4X_4+\beta_5X_5\\&+\beta_{12}X_1X_2 +\beta_{13}X_1X_3 +\beta_{14}X_1X_4 +\beta_{15}X_1X_5\\&+\beta_{23}X_2X_3 +\beta_{24}X_2X_4 +\beta_{25}X_2X_5 +\beta_{34}X_3X_4 +\beta_{35}X_3X_5\\ &+\beta_{125}X_1X_2X_5 +\beta_{134}X_1X_3X_4 +\beta_{135}X_1X_3X_5\\&+\beta_{145}X_1X_4X_5 +\beta_{234}X_2X_3X_4 +\beta_{235}X_2X_3X_5\\ &+\beta_{245}X_2X_4X_5 +\beta_{2345}X_2X_3X_4X_5 +\varepsilon .
+\end{aligned}
+\tag{2}
+\end{equation}
+
+Thus, the final model contained 23 estimated coefficients when the intercept was included, leaving $32-23=9$ residual degrees of freedom. Terms not retained in the reduced model were pooled into the residual. Because the FEM simulations were deterministic rather than replicated experimental measurements, the residual term $\varepsilon$ represents lack of fit of the reduced regression model to the simulated responses rather than experimental or measurement error. Consequently, the inferential statistics reported for the retained effects are based on this residual lack-of-fit estimate.
+
+The analysis of variance (ANOVA) for the final reduced model is summarized in Table 2. The model accounted for approximately 98.1\% of the variation in the simulated log-transformed strain response ($R^2=0.9811$), with an RMSE of 0.5554 log(strain) units.
+
+\begin{table}[h!]
+\centering
+\caption{Design of experiments showing variations in length, width, thickness, modulus, and displacement across 32 experimental runs.}
+\label{Table 1}
+\begin{tabular}{c c c c c c}
+\hline
+Run & Length (mm) $X_{1}$ & Width (µm) $X_{2}$ & Thickness (µm) $X_{3}$ & Modulus (GPa) $X_{4}$ & Displacement (µm) $X_{5}$ \\
+\hline
+1  & 1 & 100 & 100 & 300 & 1 \\
+2  & 1 & 1   & 1   & 300 & 1 \\
+3  & 5 & 100 & 1   & 300 & 50 \\
+4  & 5 & 1   & 1   & 300 & 50 \\
+5  & 1 & 1   & 1   & 2   & 1 \\
+6  & 1 & 1   & 1   & 2   & 50 \\
+7  & 1 & 100 & 100 & 2   & 50 \\
+8  & 5 & 1   & 100 & 300 & 1 \\
+9  & 1 & 100 & 1   & 2   & 1 \\
+10 & 1 & 1   & 1   & 300 & 50 \\
+11 & 5 & 100 & 1   & 2   & 50 \\
+12 & 1 & 1   & 100 & 300 & 50 \\
+13 & 1 & 100 & 100 & 2   & 1 \\
+14 & 5 & 100 & 100 & 2   & 1 \\
+15 & 5 & 1   & 1   & 2   & 1 \\
+16 & 1 & 1   & 100 & 300 & 1 \\
+17 & 5 & 1   & 100 & 2   & 50 \\
+18 & 1 & 100 & 1   & 300 & 1 \\
+19 & 5 & 100 & 1   & 2   & 1 \\
+20 & 5 & 1   & 100 & 300 & 50 \\
+21 & 5 & 1   & 100 & 2   & 1 \\
+22 & 1 & 100 & 100 & 300 & 50 \\
+23 & 1 & 1   & 100 & 2   & 50 \\
+24 & 5 & 100 & 100 & 300 & 1 \\
+25 & 5 & 100 & 1   & 300 & 1 \\
+26 & 1 & 100 & 1   & 300 & 50 \\
+27 & 5 & 1   & 1   & 2   & 50 \\
+28 & 1 & 1   & 100 & 2   & 1 \\
+29 & 5 & 100 & 100 & 2   & 50 \\
+30 & 5 & 1   & 1   & 300 & 1 \\
+31 & 5 & 100 & 100 & 300 & 50 \\
+32 & 1 & 100 & 1   & 2   & 50 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\caption{Analysis of variance (ANOVA) for the final reduced regression model of log-transformed tissue strain.}
+\label{tab:anova}
+\begin{tabular}{lccccc}
+\hline
+\textbf{Source} & \textbf{DF} & \textbf{Sum of Squares} & \textbf{Mean Square} & \textbf{$F$ Ratio} & \textbf{$p$-value} \\
+\hline
+Model & 22 & 144.3351 & 6.5607 & 21.2699 & $<0.0001$ \\
+Residual (lack of fit) & 9 & 2.7760 & 0.3084 & -- & -- \\
+Corrected Total & 31 & 147.1112 & -- & -- & -- \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Development of Finite Element Modeling (FEM) System}
+
+
+A 3D finite element model was developed using the Structural Mechanics Module of COMSOL Multiphysics (COMSOL Inc., Burlington, MA, USA) \cite{Bathe1996}. The computational model consisted of two primary components: (i) a 3D rectangular prism representing a localized region of rodent brain tissue surrounding the implant \cite{Subbaroyan2005, AlAbed2022, Polanco2012} and (ii) a model of the implant shank with variable geometric dimensions and prescribed micromotion displacement corresponding to the design variables described in Table \ref{Table 1} (X1, X2, X3, X4, and X5). The implant shank was embedded within the tissue domain to depict the implant-tissue interface. The mechanical interaction between the implant and the surrounding tissue model was then computed during prescribed lateral displacement of the implant shank, with the resulting deformation transferred to the surrounding tissue through the bonded implant-tissue interface. The tissue block has dimensions of (1~\mathrm{mm}\times1~\mathrm{mm}\times10~\mathrm{mm}), corresponding to length (l), base (b), and height (h), as shown in Figure \ref{fig:fig1}a. Prior experimental and computational studies have shown that the difference in predicted strain between linear isotropic brain tissue models, and more complex anisotropic nonlinear models, often used to describe white matter mechanics, is generally less than approximately 2\% for the small deformation levels relevant to neural implant micromotion \cite{Subbaroyan2005, Prange2002, Taylor2004, Feng2013}. Based on this small discrepancy, the rodent brain tissue in this study was modeled using a linear isotropic constitutive formulation consistent with previously reported neural tissue modeling studies \cite{Subbaroyan2005, AlAbed2022}. Brain tissue was assigned an elastic modulus of $E = 6~\text{kPa}$ and a Poisson ratio of $\nu = 0.45$, reported finite element models of the intracortical probe-tissue interface\cite{Subbaroyan2005, AlAbed2022}.The limitations associated with applying this linear, infinitesimal-strain formulation to simulation conditions producing large localized strain values are addressed in Section 2.3. Since implantation damage and micromotion-related tissue deformation are localized near the implant surface, commonly referred to as the tissue damage zone or ``kill zone'' \cite{Edell1992, Buzsaki2004} the tissue domain used in this model was designed to be substantially larger than this localized region to ensure that the strain field near the implant could be accurately resolved. To evaluate the spatial distribution of strain resulting from the prescribed lateral displacement of the implant relative to the surrounding tissue, three locations along the implant axis were analyzed: the tissue surface, the midpoint of the shank, and the tip region, as illustrated in Figure \ref{fig:fig1}b .
+
+
+
+
+
+
+%\subsubsection{Three-Dimensional Rodent Brain Tissue Model}\leavevmode\par
+
+%A three-dimensional rectangular block with dimensions of 
+%$1~\mathrm{mm} \times 1~\mathrm{mm} \times 10~\mathrm{mm}$, 
+%corresponding to length ($l$), base ($b$), and height ($h$), was constructed using the graphical interface of COMSOL Multiphysics to represent the surrounding brain tissue domain. The tissue domain was intentionally selected to be substantially larger than the region affected by implantation damage and micromotion-induced strain in order to minimize boundary effects on the computed strain distribution. Previous studies have reported that implantation damage and micromotion-related tissue deformation are localized near the implant surface, commonly referred to as the tissue damage zone or ``kill zone'' surrounding the device \cite{Edell1992, Buzsaki2004}. Therefore, the tissue domain used in this model was designed to be substantially larger than this localized region to ensure that the strain field near the implant could be accurately resolved. Brain tissue was modeled as a soft elastic material representative of gray matter, using mechanical properties available in COMSOL Multiphysics and consistent with reported literature values \cite{Subbaroyan2005, AlAbed2022}.
+
+%To evaluate the spatial distribution of strain resulting from the applied tissue displacement relative to the implant, three locations along the implant axis were analyzed: the tissue surface, the midpoint of the shank, and the tip region, as illustrated in Figure~\ref{fig:fig1}b.
+
+\subsubsection{Geometric Footprint and Material Properties}
+The second input to the model is the geometric dimensions of the implant shank. A total of 32 unique shank geometries were generated based on the design variables described in Table \ref{Table 1} (X1, X2, and X3). These combinations were derived from the full-factorial design used in the DOE framework \cite{Kumar2014, Krishnan2021}. Varying these geometric parameters enables systematic evaluation of how implant dimensions influence the mechanical strain distribution in the surrounding brain tissue. For example, two representative geometries are illustrated in Figure \ref{fig:fig1}c to show the range of configurations considered in this study: Geometry A, with a relatively short and thick shank (X1 = 1 mm, X2 = 100 µm, X3 = 100 µm), and Geometry B, with a longer and thinner shank (X1 = 5 mm, X2 = 1 µm, X3 = 1 µm).
+
+To evaluate the influence of material properties on implant--tissue mechanical interactions, simulations were performed using two representative implant materials: flexible polyimide and silicon carbide (SiC). Polyimide (E = 2 GPa, $\nu = 0.33$) was selected because it represents a compliant polymer material commonly used in flexible neural probes \cite{AlAbed2022, Pimenta2024, Cheung2007, vanDaal2020, Freitas2022, Pimenta2021, Vomero2022, Tintelott2022, Sperry2018}, whereas silicon carbide ( $E = 300$ GPa, $\nu = 0.21$) represents a stiff semiconductor material with various polymorphs (crystalline or amorphous) used in neural interfaces \cite{Deku2018, Knaack2016, Bernardin2018, DiazBotia2017, Beygi2019, Abbott2024, Geramifard2024, Hsu2007, Nguyen2025, Frewin2025, Haghighi2025}. The elastic modulus assigned to the SiC shank (E = 300 GPa) corresponds to experimentally reported values for silicon carbide materials used in neural implant devices.The Poisson ratios used in the finite element simulations were 0.33 for polyimide and 0.21 for SiC.
+
+
+
+\subsubsection{Applied Displacement and Fixed Constraints}
+
+Physiological processes such as cardiac and respiratory activity induce continuous pulsation within brain tissue \cite{Polanco2014, Duncan2021, Gilletti2006}. This pulsation produces lateral displacement perpendicular to the longitudinal axis of the implant shank. To prevent rigid-body motion and ensure numerical stability, appropriate boundary conditions were imposed in the computational model. Fixed constraints were applied to the edges of the bottom surface of the tissue domain, corresponding to AB, BC, CD, and DA in Figure \ref{fig:fig1}a. These constraints prevented large-scale global displacement of the tissue domain while allowing localized deformation around the implant. The implant-tissue interface was modeled as bonded, representing good adhesion and preventing relative slip between the implant and surrounding tissue.
+
+To simulate physiologically relevant brain micromotion, displacement amplitudes were selected based on prior experimental observations \cite{Subbaroyan2005}. Reported lateral displacements range from approximately 10 µm to 30 µm due to respiratory pulsation and from 2 µm to 4 µm due to vascular pulsation \cite{Duncan2021, Gilletti2006}. In this study, physiologically relevant micromotion was simulated by prescribing lateral displacements at the top of the shank rather than as an applied force to the tissue. The displacement was prescribed in the $x$-direction, perpendicular to the longitudinal axis of the implant, with $u_x = 1~\mu$m or $50~\mu$m and $u_y = u_z = 0$. In the model coordinate system, the x-direction corresponded to the probe-width direction. A displacement of 1 µm was used to represent small-amplitude vascular pulsations, whereas a larger displacement of 50 µm was used to model higher-amplitude micromotion condition.
+
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.99\textwidth]{figures/Figure 1.png}
+    \caption{Finite element model and representative microelectrode geometries used for mechanical strain analysis in brain tissue. (a) Three-dimensional finite element mesh of the brain tissue domain with an implanted microelectrode, illustrating the prescribed lateral displacement ($u_x$) applied at the top surface of the implant shank in the probe-width direction to simulate micromotion-induced mechanical loading (b) Schematic of the computational brain tissue block ($1000 \times 1000~\mu\mathrm{m}$) showing the implanted probe and the three monitoring locations used for strain analysis: surface (Point 1), mid-shank (Point 2), and tip (Point 3). (c) Representative probe geometries evaluated in the simulation, including a conventional $100 \times 100~\mu\mathrm{m}$ cross-section probe (A) and an ultrathin $1~\mu\mathrm{m}$-thick slender probe (B), demonstrating the effect of implant dimensions on tissue strain distribution.}
+    \label{fig:fig1}
+\end{figure}
+
+\subsubsection{Applied Meshing}
+
+Finite element meshing was used to discretize the computational domain and enable numerical solution of the governing solid mechanics equations \cite{Bathe1996}. The tissue domain and implant shank geometry were subdivided into tetrahedral, triangular, and quadrilateral finite elements, which are well-suited for representing complex three-dimensional geometries. The mesh was generated within the COMSOL Multiphysics environment using an adaptive refinement strategy \cite{Subbaroyan2005, Polanco2014}. To capture strain gradients near the implant-tissue interface, a physics-controlled meshing approach was adopted. Specifically, an extra-fine mesh was applied throughout the tissue domain, while an extremely fine mesh was generated in the region immediately surrounding the shank because the primary region of interest was the tissue adjacent to the implant. The characteristic element size near the implant-tissue interface was on the order of a few micrometers, enabling accurate resolution of the localized stress-strain gradients that develop around the shank geometry.
+Because the implant dimensions varied across the 32 factorial-design conditions, COMSOL automatically regenerated the physics-controlled mesh after each geometry update. Thus, each implant geometry was independently remeshed using the same meshing strategy rather than reusing a single mesh for all simulation conditions. Consequently, the total number of elements varied among geometries.
+
+A representative view of the finite element mesh and model geometry is shown in Figure \ref{fig:fig1}a, the generated mesh consisted of 19,857 elements, 3,667 mesh vertices, and 378 edges. This element count therefore corresponds to the representative configuration shown in Figure 1a and should not be interpreted as the element count for all 32 simulation geometries.
+
+
+
+\subsection{Model Computation}
+
+Finite element simulations were performed in COMSOL Multiphysics using the Structural Mechanics Module and a three-dimensional linear elastic solid mechanics formulation. Stationary, or quasi-static, analyses were used to evaluate the mechanical response of MEA shanks subjected to prescribed micromotion displacements across a range of geometric and material configurations \cite{Bathe1996}. In this approach, the applied displacement represents the amplitude of physiological micromotion, and the resulting equilibrium strain field is computed without explicitly modeling time-dependent dynamics. This quasi-static \cite{Andrei2012}assumption is appropriate because the mechanical response of brain tissue occurs over a much shorter time scale than physiological micromotion induced by respiratory and vascular pulsation \cite{Sridharan2013}. 
+
+The simulations were conducted under the linear elastic constitutive formulation without geometric nonlinearity and therefore used infinitesimal-strain kinematics~\cite{Subbaroyan2005,AlAbed2022}. Mechanical strain was selected as the primary outcome metric because of its established role in initiating neuroinflammatory responses and tissue damage at the implant-tissue interface. Equivalent deviatoric strain was extracted from the tissue domain and used as the primary mechanical response variable throughout the DOE and regression analyses. The equivalent deviatoric strain was expressed as a dimensionless strain ratio. Because the simulated strain values spanned several orders of magnitude, the response was transformed using the base-10 logarithm, $\log_{10}(\mathrm{strain})$, prior to statistical analysis in JMP. No additional scaling, normalization, or conversion to percent strain was applied before the logarithmic transformation. For brevity, the term ``Log(Strain)'' used throughout the figure axes denotes the base-10 logarithm of the dimensionless equivalent deviatoric strain, $\log_{10}(\mathrm{strain})$. To characterize the strain distribution around the implant, equivalent deviatoric strain responses were evaluated both throughout the tissue domain and at specific locations along the shank, including the cortical surface, the midpoint of the shank, and the tip region.
+
+Because some simulation conditions produced localized equivalent deviatoric strain values outside the range conventionally associated with infinitesimal-strain kinematics, the absolute magnitudes of these high-strain predictions are interpreted cautiously. Accordingly, the present factorial analysis is primarily used to evaluate relative changes and trends in tissue strain across implant geometries, material properties, and imposed micromotion conditions.
+
+
+
+
+
+
+
+
+
+\section{Result Analysis}
+
+\subsection{Regression Model Validation}
+
+The regression model was evaluated by comparing the strain values obtained from the FEM simulations with the corresponding strain values predicted by the regression model, as shown in Figure~\ref{fig:fig2}. This model was constructed to provide a statistical representation of the simulation results and to quantify the influence of the design parameters within the DOE framework. Therefore, validation of the regression model ensures that the statistical model accurately represents the strain behavior obtained from the FEM simulations and can be reliably used to interpret parameter effects.
+
+
+Figure~\ref{fig:fig2} shows a scatter plot comparing predicted and simulated log-transformed strain values. Each data point represents one simulation case from the 32-run factorial design. The colors of the data points correspond to the coded factor levels used in the DOE design. Red points indicate low-level factor combinations, whereas blue points indicate high-level factor combinations. The blue horizontal line denotes the mean $\log(\mathrm{strain})$ baseline, corresponding to a null model that assigns a constant value to all observations. The systematic deviation of the data from this line indicates that the model captures underlying structure beyond the population mean. The red line represents the fitted regression relationship between predicted and simulated values, and the shaded region indicates the 95\% confidence interval of the regression fit.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.50\textwidth]{figures/Figure2_v2.png}
+    \captionsetup{font=small}
+    \caption{Regression model validation. Scatter plot comparing predicted and simulated log-transformed strain values for the 32 DOE simulation cases. Red and blue markers indicate low- and high-level factor combinations, respectively. The blue line indicates the mean $\log(\mathrm{strain})$ baseline, the red line shows the fitted regression relationship, and the shaded region represents the 95\% confidence interval ($\mathrm{RMSE}=0.5554$, $R^2=0.9811$, $p<0.0001$).}
+    \label{fig:fig2}
+\end{figure}
+
+The goodness of fit of the model was evaluated using standard statistical metrics. The coefficient of determination ($R^2$) was 0.9811, indicating that approximately 98\% of the variation in the simulated strain values is explained by the regression model. The root mean square error (RMSE) was 0.5554 in log-transformed strain units and represents the average difference between the predicted strain values and the strain values obtained from the COMSOL simulations. The statistical significance of the regression model was evaluated using analysis of variance (ANOVA). The resulting $p$-value ($p < 0.0001$) indicates that the regression model provides a statistically significant relationship between the input variables, including geometric parameters, material modulus, and displacement, and the resulting mechanical strain values.
+
+
+\subsection{Independent Effects of Geometric Parameters and Displacement}
+
+The independent effects of implant geometric parameters and imposed displacement on the strain response were evaluated using least-squares mean (LSM) plots derived from the regression model. The log-transformed strain values shown in Figure~\ref{fig:fig3} correspond to strain responses obtained from the finite element simulations for the 32-run factorial design. Because the strain values spanned several orders of magnitude across the parameter space, the response was log-transformed before regression analysis to improve statistical stability and interpretability. Each point represents the estimated mean strain for a given factor level, averaged over the remaining variables. Error bars in Figures \ref{fig:fig3}–\ref{fig:fig6} represent model-based standard errors of the least-squares mean estimates derived from the reduced regression model. These error bars do not represent variability among replicate FEM simulations because the simulations were deterministic. Instead, the standard errors are based on the residual lack-of-fit estimate of the reduced statistical model.
+
+Figure~\ref{fig:fig3}a shows the effect of varying implant length on the simulated strain response. Increasing the implant length from 1~mm to 5~mm resulted in a decrease in the predicted log-strain value. This trend indicates that, with all other geometric parameters held constant, increasing implant shank length monotonically reduces the magnitude of localized strain in the surrounding tissue adjacent to the implant. In contrast, width exhibited the opposite trend (Figure~\ref{fig:fig3}b), where increasing the width from 1~$\mu$m to 100~$\mu$m increased the predicted $\log(\mathrm{strain})$ response ($P = 0.0003$). This result indicates that wider shanks generally generate larger strain responses in the surrounding tissue domain.
+
+A similar increasing trend was observed for implant thickness (Figure~\ref{fig:fig3}c), where increasing the thickness from 1~$\mu$m to 100~$\mu$m increased the predicted strain. Although the magnitude of this effect was smaller than that observed for width, thicker implant geometries still led to higher strain values within the surrounding tissue region. The strongest effect among all parameters was observed for imposed tissue displacement (Figure~\ref{fig:fig3}d). Increasing the displacement from 1~$\mu$m to 50~$\mu$m produced a substantial increase in the predicted log-strain response ($P < 0.0001$). In the model, this displacement represents simulated micromotion between the implant and the surrounding tissue. The strong monotonic increase in strain with displacement indicates that relative motion between the implant and brain tissue is a dominant driver of mechanical strain.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.99\textwidth]{figures/Figure3_Not_Bold.pdf}
+    \caption{Least squares mean (LSM) analysis of strain as a function of probe geometry and displacement. (a) Effect of shank length (1--5~mm), showing reduced strain with increasing length ($p = 0.0007$), (b) Effect of probe width (1--100~$\mu$m), showing increased strain with increasing width ($p = 0.0003$), (c) Effect of probe thickness (1--100~$\mu$m), showing increased strain with increasing thickness ($p = 0.0029$), (d) Effect of probe displacement (1--50~$\mu$m), showing a pronounced increase in strain with higher displacement (****$p < 0.0001$). Note: Connecting lines indicate increasing or decreasing trends, Error bars represent model-based standard errors of the least-squares mean estimates derived from the reduced regression model.}
+    \label{fig:fig3}
+\end{figure}
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/Figure_4.pdf}
+    \caption{Two-way interaction effects of probe geometry, material modulus, and displacement on strain. (a) Length $\times$ modulus interaction, showing that increasing modulus increases strain for short probes (1~mm) but slightly decreases strain for long probes (5~mm). (b) Length $\times$ thickness interaction, showing that increasing thickness increases strain for both probe lengths, with a substantially greater increase for short probes than for long probes. (c) Length $\times$ displacement interaction, showing that increasing displacement markedly increases strain for both short and long probes, with a greater increase observed for long probes. (d) Length $\times$ width interaction, showing that increasing width increases strain for both probe lengths, with a substantially stronger effect in short probes than in long probes. (e) Width $\times$ modulus interaction, showing that increasing modulus increases strain for narrow probes (1~$\mu$m) but slightly decreases strain for wide probes (100~$\mu$m). (f) Width $\times$ displacement interaction, showing that increasing width increases strain at both displacement levels, with a larger width-dependent increase under the low-displacement condition (1~$\mu$m) than under the high-displacement condition (50~$\mu$m). Note: Error bars represent model-based standard errors derived from the reduced regression model and do not represent replicate FEM variability.}
+    \label{fig:fig4}
+\end{figure} 
+
+
+
+\subsection{Combined Effects of Implant Geometry and Micromotion on Tissue Strain}
+
+To evaluate whether the effects of implant geometry and material properties on tissue strain are interdependent, two-way interaction terms among implant length, width, thickness, elastic modulus, and imposed tissue displacement were examined using interaction trend plots derived from the regression model of the log-transformed strain response. The statistical significance of these interaction effects was assessed using analysis of variance (ANOVA). The results revealed significant coupling between implant length and multiple design parameters in determining tissue strain.
+
+Figure~\ref{fig:fig4}a shows a significant interaction between implant material modulus and length ($P = 0.0166$). For short implants ($L = 1~\mathrm{mm}$), increasing modulus resulted in a marked increase in the predicted $\log(\mathrm{strain})$. In contrast, for longer implants ($L = 5~\mathrm{mm}$), increasing modulus produced a modest decrease in $\log(\mathrm{strain})$. These opposing trends indicate that the effect of material modulus on tissue strain is not uniform, but is strongly modulated by implant length.
+
+A similar interaction was observed between shank length and thickness, as shown in Figure~\ref{fig:fig4}b. For shorter implants ($L = 1~\mathrm{mm}$), increasing thickness to $100~\mu\mathrm{m}$ produced noticeably higher strain responses. In contrast, the effect of thickness was diminished for longer implants ($L = 5~\mathrm{mm}$). Figure~\ref{fig:fig4}c illustrates the interaction between implant length and displacement. For both short ($1~\mathrm{mm}$) and long ($5~\mathrm{mm}$) implants, increasing displacement caused a marked rise in strain. However, this increase was more pronounced for longer implants. Under low-displacement conditions, strain values remained comparatively low for both implant lengths.
+
+A related trend was observed between implant length and width in Figure~\ref{fig:fig4}d. Width had a much stronger effect on strain for short implants ($1~\mathrm{mm}$) than for long implants ($5~\mathrm{mm}$). As implant width increased to $100~\mu\mathrm{m}$, strain rose sharply for short shanks, whereas the increase was more moderate for long shanks. Figure~\ref{fig:fig4}e shows the interaction between implant width and modulus. Opposing trends were observed: for wider implants ($100~\mu\mathrm{m}$), strain decreased slightly with increasing modulus ($300~\mathrm{GPa}$), whereas for narrower implants ($1~\mu\mathrm{m}$), strain increased with increasing modulus. Finally, Figure~\ref{fig:fig4}f shows that even under minimal displacement ($1~\mu\mathrm{m}$), a wider probe ($100~\mu\mathrm{m}$) produced higher strain. At larger displacement, the overall strain remained substantially higher than under small-displacement conditions. 
+
+
+\begin{figure}[!b]
+    \centering
+    \includegraphics[width=0.85\columnwidth]{figures/Figure_5.pdf}
+    \caption{Three-way interaction effects of probe geometry, modulus, width, and displacement on strain. 
+    (a) Thickness $\times$ modulus $\times$ width interaction, showing that strain increases more steeply with modulus at larger widths (100~$\mu$m) compared to narrow probes (1~$\mu$m). 
+    (b) Length $\times$ modulus $\times$ displacement interaction, showing that displacement amplifies strain in long probes across different moduli, whereas short probes exhibit relatively stable responses. Error bars represent model-based standard errors derived from the reduced regression model.}
+    \label{fig:fig5}
+\end{figure}
+
+\subsection{Implant Width and Displacement Dominates the Strain Behavior}
+To further examine how multiple implant design parameters jointly influence tissue strain, three-way interaction trend plots were analyzed based on the regression model of the log-transformed strain response. In these plots, the x-axis represents the combined levels of two parameters, such as thickness and modulus in Figure~\ref{fig:fig5}a and length and modulus in Figure~\ref{fig:fig5}b. The colored lines represent the third interacting parameter. In Figure~\ref{fig:fig5}a, the red and blue lines correspond to different implant widths, $1~\mu\mathrm{m}$ and $100~\mu\mathrm{m}$, respectively. In Figure~\ref{fig:fig5}b, the red and blue lines correspond to different displacement levels, $1~\mu\mathrm{m}$ and $50~\mu\mathrm{m}$, respectively.
+
+Figure~\ref{fig:fig5}a shows the interaction among implant thickness, modulus, and implant width. Wider implants ($100~\mu\mathrm{m}$) consistently produced higher strain responses than narrower implants ($1~\mu\mathrm{m}$) across most thickness--modulus combinations. In general, increasing thickness or modulus tended to amplify the strain response more strongly for wider devices. In contrast, narrow implants exhibited relatively smaller changes in strain across the same parameter combinations. Overall, for the $1~\mu\mathrm{m}$-wide device, strain increased with increasing modulus and thickness.
+
+The interaction among implant length, modulus, and displacement is shown in Figure~\ref{fig:fig5}b. Increasing displacement to $50~\mu\mathrm{m}$ resulted in substantially higher strain levels across both implant lengths. However, the effect of displacement was further modulated by implant length and material modulus. Longer implants ($5~\mathrm{mm}$) generally produced lower strain responses than shorter implants ($1~\mathrm{mm}$) under low-displacement conditions, whereas strain levels for both lengths increased markedly under larger displacement.
+
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{figures/Figure_6.pdf}
+    \caption{Four-way interaction of probe width, thickness, modulus, and displacement on strain. Error bars represent model-based standard errors derived from the reduced regression model.}
+    \label{fig:fig6}
+\end{figure}
+
+
+\subsection{Four-Way Interaction Effects on Tissue Strain}
+
+The four-way interaction among width, thickness, modulus, and displacement was statistically significant ($P = 0.0182$), indicating that tissue strain is governed by a strongly coupled relationship among implant geometry, material modulus, and micromotion amplitude (Figure~\ref{fig:fig6}). Under low displacement conditions ($1~\mu\mathrm{m}$; red), strain varied substantially across parameter combinations, with $\log(\mathrm{strain})$ spanning from approximately $-4.63$ in the smallest and most compliant configurations to $-0.56$ in larger geometries with increased stiffness. This nearly four-order-of-magnitude spread suggests that, under physiological low-amplitude micromotion, implant design strongly determines the mechanical burden transferred to the surrounding tissue. The lowest strain states were consistently associated with small, narrow geometries ($1~\mu\mathrm{m}$ width), regardless of thickness or modulus, whereas larger-width configurations produced progressively elevated strain. Importantly, symmetric enlargement of both width and thickness ($100 \times 100~\mu\mathrm{m}$) did not uniformly produce the highest strain. Under high displacement conditions ($50~\mu\mathrm{m}$; blue), strain increased markedly across all parameter combinations, with $\log(\mathrm{strain})$ ranging from approximately $-0.61$ to $0.48$, thereby shifting the entire system into a substantially higher mechanical loading regime. However, the effects of geometry and material properties remained evident. Narrow cross-sections continued to exhibit the lowest strain, whereas wider and stiffer geometries consistently occupied the highest strain states. Notably, the $100 \times 100~\mu\mathrm{m}$ geometry produced among the highest strains across modulus conditions, reaching the peak log-strain values. These findings indicate that displacement establishes the overall mechanical loading regime, whereas width, thickness, and modulus determine where within that regime a given implant resides. Rather than becoming negligible at high displacement, geometric and material effects continue to modulate strain, but on a mechanically elevated baseline established by large-amplitude micromotion.
+
+
+\subsection{Tissue Strain Concentrations at the Tip of Short-Thick Devices and the Top of Long-Thin Devices}
+
+\noindent
+To assess spatial variations in tissue strain across different implant geometries, implant length and thickness were varied while width was held constant at $100~\mu\mathrm{m}$. Two representative configurations were analyzed: (i) a short, thick implant with a length of $1~\mathrm{mm}$, width of $100~\mu\mathrm{m}$, and thickness of $100~\mu\mathrm{m}$; and (ii) a long, thin implant with a length of $5~\mathrm{mm}$, width of $100~\mu\mathrm{m}$, and thickness of $1~\mu\mathrm{m}$. These configurations highlight how differences in implant length and thickness alter the spatial distribution of strain within the surrounding tissue.
+
+For the short, wide device, the three-dimensional volumetric strain distribution (Figure~\ref{fig:fig7}a) showed that strain was highly localized near the implant tip, with the magnitude decreasing as distance from the implant surface into the surrounding tissue increased. To quantify this behavior, equivalent strain (von Mises strain) profiles were extracted along three predefined cutlines corresponding to the tip, midsection, and top regions of the implant (Figure~\ref{fig:fig7}b). These profiles showed that the tip region exhibited the highest strain magnitude, followed by the midsection, whereas the top region showed comparatively lower strain values. The strain field visualizations (Figure~\ref{fig:fig7}c,d) further showed that deformation was concentrated near the distal end of the implant and along the shank surface. A quantitative comparison of regional averages (Figure~\ref{fig:fig7}e) indicated statistically significant differences among locations, with the tip region exhibiting the highest mean strain, followed by the midsection, and the lowest strain near the top surface. These results demonstrate that, for short, wide geometries, strain is dominated by localized deformation near the implant tip.
+
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/Fig7.pdf}
+    \caption{Finite element modeling of tissue strain distribution around a short-wide neural device (1~mm length $\times$ 100~$\mu$m width $\times$ 100~$\mu$m thickness). (a) 3D volumetric strain distribution showing concentration at the tip with lateral spread. (b) Equivalent deviatoric strain as a function of distance for tip, mid, and top regions. (c) Simulated device geometry illustrating volumetric strain localization at the tip and surrounding shank. (d) Heatmap of average strain in tip, mid, and top regions. (e) Quantitative comparison of average strain across regions with statistical significance ($p < 0.001$, $p < 0.01$).The spatial strain distribution shown corresponds to a prescribed lateral displacement of $1~\mu$m.}
+    \label{fig:fig7}
+\end{figure}
+
+
+
+In contrast, the long, thin shank ($5~\mathrm{mm}$ length, $100~\mu\mathrm{m}$ width, and $1~\mu\mathrm{m}$ thickness) exhibited a different strain distribution pattern. The volumetric strain field (Figure~\ref{fig:fig8}a) showed that deformation was more distributed along the length of the implant, with reduced localization at the tip and increased strain near the top, or cortical surface, region. Equivalent strain profiles (Figure~\ref{fig:fig8}b) confirmed this trend, with the top region exhibiting the highest strain magnitude, whereas the midsection and tip regions showed comparatively lower values. The strain maps (Figure~\ref{fig:fig8}c,d) further demonstrated that strain was concentrated near the cortical entry region rather than the distal tip. Quantitative comparison of the spatially sampled equivalent deviatoric strain values (Figure \ref{fig:fig8}e) showed that the top region exhibited the highest mean strain, followed by the midsection and tip region.
+
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/Figur-8.pdf}
+    \caption{Finite element modeling of tissue strain distribution around a long-thin neural device ($5~\mathrm{mm}$ length $\times 100~\mu\mathrm{m}$ width $\times 1~\mu\mathrm{m}$ thickness). (a) 3D volumetric strain distribution illustrating strain propagation along the shank and cortical entry surface. (b) Equivalent deviatoric strain profiles as a function of distance for the tip, mid, and top regions, showing the highest values at the top. (c) Simulation geometry with volumetric strain concentrated near the cortical entry point. (d) Heatmap of average strain across the tip, mid, and top regions, showing minimal strain at the tip and maximum strain at the top. (e) Quantitative comparison of average strain across regions, showing significantly higher strain at the top compared with both the mid and tip regions. The spatial strain distribution shown corresponds to a prescribed lateral displacement of $1~\mu\mathrm{m}$.}
+\label{fig:fig8}
+\end{figure}
+
+
+\section{Discussion}
+
+Understanding how neural implant design influences the mechanical environment of the surrounding tissue is critical for improving long-term device performance and biocompatibility. Tissue strain arising from implant insertion \cite{Singh2016, Guo2022, Lee2013, Zhang2021, Casanova2014} and micromotion \cite{Subbaroyan2005, Polanco2012, Polanco2014, Muthuswamy2003} has been implicated as a key driver of the foreign body response, motivating extensive efforts to optimize device geometry \cite{Lee2013, Kim2021, Zhu2011, Zhou2022} and material properties \cite{Park2021, Zhou2022, Andrei2012}. Substantial effort has also focused on developing materials that better match the mechanical properties of brain tissue. For example, hydrogel-integrated probes have been shown to reduce interfacial stress through enhanced compliance \cite{Park2021}, while adaptive materials, such as silk-based systems, enable transient stiffness during insertion followed by softening in vivo \cite{Zhou2022}. Surface coatings have also been investigated as a strategy to tune probe--tissue interactions by modifying friction and local strain distributions \cite{Andrei2012}.
+
+In parallel, most implant footprint design strategies have focused on individual geometric parameters in isolation, often assuming that their effects on tissue mechanics are independent and predictable. This approach overlooks the inherently coupled nature of implant--tissue interactions, where multiple design variables act simultaneously to shape the local strain field. Foundational work by Subbaroyan et al. \cite{Subbaroyan2005} established one of the first three-dimensional FEM frameworks to quantify interfacial strain induced by micromotion. That study showed that low-modulus materials, such as polyimide with an elastic modulus of $E = 2~\mathrm{GPa}$, can reduce strain at the probe tip by approximately 65--94\% under tangential tethering forces compared with rigid silicon probes with an elastic modulus of $E = 165~\mathrm{GPa}$. This work laid the foundation for understanding how material properties directly influence tissue response.
+
+Building on this framework, Polanco et al. \cite{Polanco2012} demonstrated through dynamic finite element modeling that cyclic physiological micromotion generates localized stress and strain at the brain--implant interface and that mechanically compliant probes markedly reduce this mechanical burden. In later work, Polanco et al. \cite{Polanco2016} showed through transient finite element modeling that mechanically compliant probes with brain-like stiffness, approximately $200~\mathrm{kPa}$, can reduce micromotion-induced tissue stress and strain by as much as 95\% at the probe tip compared with stiffer implants. These studies established mechanical compliance matching as a key strategy for minimizing chronic tissue injury at the brain--implant interface and further showed that interface conditions, including friction and relative motion, influence dynamic strain fields.
+
+Despite these advances, the role of implant geometry in shaping the chronic mechanical environment remains insufficiently defined. Prior studies have shown that reducing substrate stiffness and modifying probe--tissue coupling can mitigate micromotion-induced strain and tissue damage \cite{Subbaroyan2005, AlAbed2022, Sridharan2015, Seymour2007, Polanco2014, Muthuswamy2003}; however, these effects have largely been examined under fixed geometries or through single-parameter variation. Although geometric features such as cross-sectional shape influence both the magnitude and spatial extent of strain \cite{Kim2021}, their contribution has not been evaluated systematically alongside material properties and imposed tissue displacement. As a result, the combined and potentially non-independent effects of geometry, material modulus, and mechanical loading remain unresolved.
+
+Here, we address this gap using a DOE framework to systematically quantify how MEA shank dimensions, material modulus, and displacement jointly govern strain magnitude and spatial variation in the surrounding brain tissue. This approach establishes multivariate relationships that extend beyond current single-parameter analyses. While the discussion focuses primarily on interactions that showed significant effects, Table~\ref{Table 2} summarizes interaction terms that were not statistically significant ($p > 0.05$) based on ANOVA of the regression model. These results indicate that not all combinations of geometric and material parameters contribute meaningfully to strain variation. For example, interactions such as width--thickness and thickness--modulus showed negligible influence on the strain response, suggesting that their effects are largely independent within the investigated parameter space. Similarly, higher-order interactions involving length, thickness, and displacement did not exhibit statistically significant contributions.
+\begin{table}[t]
+\centering
+\caption{Summary of interaction terms that did not reach statistical significance (p>0.05) based on ANOVA of the reduced regression model. Where shown in the interaction plots or discussed in the text, these effects are interpreted descriptively as trends and not as statistically significant interactions.}
+\label{Table 2}
+\begin{tabular}{l l c c}
+\hline
+\textbf{Interaction Term} & \textbf{Order} & \textbf{$p$-value} & \textbf{Significant ($p<0.05$)} \\
+\hline
+Width $\times$ Thickness & Two-way & 0.4741 & No \\
+Thickness $\times$ Modulus & Two-way & 0.2149 & No \\
+Length $\times$ Width $\times$ Displacement & Three-way & 0.1733 & No \\
+Length $\times$ Thickness $\times$ Modulus & Three-way & 0.8813 & No \\
+Length $\times$ Thickness $\times$ Displacement & Three-way & 0.0868 & No \\
+Width $\times$ Modulus $\times$ Displacement & Three-way & 0.1093 & No \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Width and Thickness Show  Effect on Tissue Strain}
+
+{Both probe width and thickness significantly influenced micromotion-induced brain tissue strain, although the estimated main effect was larger for width within the parameter range evaluated.} From Figure \ref{fig:fig3}, increasing probe width from 1 to 100~$\mu$m produced a 1.106-unit increase in $\log(\mathrm{strain})$, whereas increasing thickness over the same range produced a 0.793-unit increase.Although the estimated change was numerically larger for width, the difference between the width and thickness effect estimates was not directly tested. Therefore, these values are not interpreted as evidence that width has a statistically greater effect on strain than thickness. Rather, both dimensions significantly influenced strain within the evaluated parameter range. 
+
+Mechanistically, increasing width enlarges the projected implant-tissue contact area in the primary direction of lateral micromotion, thereby altering interfacial load transfer and strain propagation into the surrounding tissue. In the present model, the prescribed lateral displacement was applied along the probe-width direction ($u_x$), perpendicular to the longitudinal axis of the shank. Consequently, width is also the bending dimension for this loading orientation. For a rectangular cross-section subjected to bending in this direction, the second moment of area depends cubically on width ($I \propto t w^3$), such that changes in width can strongly alter flexural rigidity.
+
+Accordingly, the  estimated width effect observed in this study should not be interpreted as a departure from classical Euler--Bernoulli beam mechanics. Rather, it is consistent with the specific loading orientation used in the model and likely reflects the combined effects of cross-sectional bending resistance, implant-tissue contact geometry, and mechanical coupling with the surrounding tissue. These results therefore emphasize that the relative effects of width and thickness must be interpreted with respect to the direction of imposed micromotion.
+
+\subsection{Micromotion Sets the Mechanical Load, While Geometry Governs Tissue Strain Transmission}
+
+Micromotion displacement emerged as the most dominant predictor of tissue strain in Figure \ref{fig:fig3}d, producing a 3.38-unit increase in log(strain) across the tested range---an effect approximately threefold greater than width and more than fourfold greater than thickness. This finding establishes displacement as the principal mechanical forcing function underlying implant-induced tissue deformation. Importantly, while displacement dictates the magnitude of external mechanical loading experienced by the implant, interaction analyses in Figure \ref{fig:fig4}c and Figure \ref{fig:fig4}f demonstrate that its effect is strongly modulated by implant geometry. In Figure \ref{fig:fig4}c, the Length $\times$ Displacement interaction reveals that longer probes substantially attenuate tissue strain under low-displacement conditions, consistent with improved load redistribution and reduced local stress concentration. However, this protective effect diminishes as displacement increases, suggesting that large micromotion amplitudes can overwhelm the strain-buffering benefit of increased shank length.  Figure \ref{fig:fig4}f shows that Increasing probe width increased strain at both displacement levels; however, the width-dependent increase was substantially greater under the low-displacement condition ($1~\mu\mathrm{m}$) than under the high-displacement condition ($50~\mu\mathrm{m}$). Specifically, increasing width from $1$ to $100~\mu\mathrm{m}$ increased $\log_{10}(\mathrm{strain})$ from approximately $-4.13$ to $-2.35$ at $1~\mu\mathrm{m}$ displacement, compared with an increase from approximately $-0.08$ to $0.35$ at $50~\mu\mathrm{m}$ displacement. Thus, although larger displacement establishes a substantially elevated overall strain regime, the relative influence of probe width is more pronounced under lower-amplitude micromotion.
+Our findings establish a hierarchical mechanical framework in which micromotion sets the external load, whereas implant geometry governs load transmission efficiency through modulation of mechanical coupling, stress concentration, and strain propagation. Although micromotion cannot be eliminated in vivo due to respiration, vascular pulsation, and head movement, its damaging mechanical consequences can be substantially attenuated through rational geometric design. Narrower, thinner, and mechanically compliant probes therefore could improve chronic interface stability not by reducing external motion itself, but by reducing the efficiency with which that motion is converted into harmful tissue strain.
+
+\subsection{Shank Length Buffers Strain Amplification and Reshapes Stiffness Sensitivity}
+In Figure \ref{fig:fig4}b, increasing thickness elevated the log transformed strain of both short and long probes, but the effect was substantially greater in short probes ($-1.72$ to $-0.40$) than in long probes ($-2.18$ to $-1.91$). A similar trend was observed in Figure \ref{fig:fig4}d, where increasing width sharply increased the log transformed strain of short probes ($-1.90$ to $-0.20$) but produced only a modest increase in long probes ($-2.31$ to $-1.77$). 
+This length dependence extended to material behavior in Figure \ref{fig:fig5}b: under low displacement, strain changed little with modulus across both probe lengths, whereas under high displacement, increasing modulus elevated the log-transformed strain in short probes ($-2.98$ to $-1.74$) but reduced strain in long probes ($-3.74$ to $-4.50$). 
+Across all three interactions, short probes consistently exhibited greater sensitivity to changes in thickness, width, and modulus, whereas long probes showed attenuated or altered responses. Together, these results establish probe length as a primary regulator of mechanical load transfer at the brain–implant interface. Increased shank length reduces the strain amplification associated with larger cross-sectional dimensions and reshapes the mechanical consequence of material stiffness, such that the effects of geometry and modulus are fundamentally conditioned by axial implant length.
+
+\subsection{Geometry Determines Whether Material Compliance Reduces Tissue Strain}
+While material compliance is widely viewed as a primary strategy for reducing mechanical mismatch at the brain–implant interface, our interaction analyses show that its influence on tissue strain depends strongly on probe geometry. In Figure \ref{fig:fig4}a, increasing modulus markedly elevated strain in short probes but slightly reduced strain in longer probes. Likewise, in Figure \ref{fig:fig4}e shows that increasing modulus elevated $\log_{10}(\mathrm{strain})$ in narrow probes ($W=1~\mu\mathrm{m}$), from approximately $-2.43$ to $-1.78$, but slightly reduced $\log_{10}(\mathrm{strain})$ in wide probes ($W=100~\mu\mathrm{m}$), from approximately $-0.91$ to $-1.08$. These opposing trends demonstrate that the influence of material stiffness cannot be interpreted independently of probe geometry.
+
+Rather than stiffness effects being uniformly greatest in short or wide configurations, the direction and magnitude of the modulus effect change with both shank length and width. This geometric dependence suggests that the mechanical consequence of stiffness is governed by the structural context in which it is applied. Accordingly, material compliance alone does not universally predict lower tissue strain; its mechanical benefit depends on the specific combination of implant dimensions and loading conditions.
+
+\subsection{Higher-Order Interactions Reveal Coupled Mechanical Design Rules}
+The higher-order interaction analyses show that micromotion-induced tissue strain arises from a coupled mechanical design space, rather than independent effects of geometry and material properties. In Figure \ref{fig:fig5}a, the Thickness $\times$ Modulus $\times$ Width interaction was significant ($P = 0.0073$), demonstrating that stiffness effects depend strongly on cross-sectional geometry. For narrow probes (W = 1 $\mu$m), increasing thickness and modulus produced only modest changes in strain, with log(strain) remaining relatively low ($-2.62$ to $-1.32$). In contrast, wide probes (W = 100 $\mu$m) occupied a substantially higher strain regime, with log(strain) ranging from $-1.78$ to $-0.05$, showing that width amplifies the mechanical effects of both thickness and modulus. A similar dependence is observed in Figure \ref{fig:fig5}b, where the Length $\times$ Modulus $\times$ Displacement interaction ($P = 0.0594$) shows that stiffness sensitivity depends on both probe length and loading condition. Under high displacement (50 $\mu$m), strain remained low across modulus conditions for both short and long probes. Under low displacement (1 $\mu$m), increasing modulus elevated strain in short probes ($-2.98$ to $-1.74$) but reduced strain in long probes ($-3.74$ to $-4.50$), showing that axial geometry fundamentally alters the mechanical consequence of stiffness. This coupling is further reinforced in the four-way interaction (Figure \ref{fig:fig6}; $P = 0.0182$), where log(strain) ranged from $-4.53$ to $-0.56$ under low displacement and from $-0.61$ to $0.48$ under high displacement across combined width--thickness--modulus states.
+
+Collectively, these higher-order interactions establish that micromotion provides the primary biomechanical forcing input, width defines baseline interfacial coupling, length governs load redistribution, and thickness and modulus tune amplification within that geometric framework. This multidimensional mechanical hierarchy argues strongly that chronic neural implant optimization must move beyond single-parameter design strategies toward integrated geometry--materials engineering aimed at minimizing strain-induced neuroimmune activation.
+
+\subsection{Cross-Sectional Dimensions Modulate the Effect of Material Stiffness on Tissue Strain}
+
+The higher-order interactions in Figure 5a and Figure 6 demonstrate that tissue strain depends on the combined effects of width, thickness, and material modulus rather than on any single cross-sectional parameter independently. In Figure 5a, the significant Thickness $\times$ Modulus $\times$ Width interaction ($P = 0.0073$) indicates that the effect of material stiffness varies with cross-sectional geometry. At a width of $100~\mu\mathrm{m}$ and a modulus of $300~\mathrm{GPa}$, increasing thickness from $1~\mu\mathrm{m}$ to $100~\mu\mathrm{m}$ increased log(strain) slightly, from approximately $-1.16$ to $-1.01$. This trend is consistent with Figure 6 ($P = 0.0182$), where, at a width of $100~\mu\mathrm{m}$, increasing thickness from $1~\mu\mathrm{m}$ to $100~\mu\mathrm{m}$ increased log(strain) from $-3.62$ to $-0.56$ at $2~\mathrm{GPa}$ and from $-2.72$ to $-2.50$ at $300~\mathrm{GPa}$. The uniformly small cross-section ($1 \times 1~\mu\mathrm{m}$) consistently produced the lowest strain across the evaluated displacement and modulus conditions, whereas the $100 \times 100~\mu\mathrm{m}$ geometry produced comparatively higher strain. These results indicate that increasing cross-sectional dimensions, particularly thickness in wider probes, can increase tissue strain, although the magnitude of this effect depends on material modulus and the associated interaction among geometric parameters. Thus, the mechanical consequences of probe width and thickness should be interpreted jointly with material stiffness rather than in terms of cross-sectional symmetry alone.
+
+\subsection{Probe Geometry Determines the Spatial Localization of Tissue Strain}
+
+Finite element strain mapping shows that implant geometry defines the location, extent, and decay profile of mechanical strain within the surrounding brain tissue. In the short-thick probe ($1~\mathrm{mm}\times100~\mu\mathrm{m}\times100~\mu\mathrm{m}$; Figure\ref{fig:fig7}), strain is concentrated near the tip, decreases along the shank, and is lowest near the cortical entry region. The strain--distance profiles (Figure\ref{fig:fig7}b) show a steep radial decay from the probe surface, indicating highly localized loading confined to a narrow peri-implant zone. This pattern is reinforced by the heatmap (Figure\ref{fig:fig7}d) and regional quantification (Figure\ref{fig:fig7}e), where average strain at the tip was significantly greater than in the mid and top regions. In contrast, the long-thin probe ($5~\mathrm{mm}\times100~\mu\mathrm{m}\times1~\mu\mathrm{m}$; Figure\ref{fig:fig8}) produced an inverted strain profile, with peak deformation concentrated near the cortical entry region and progressively lower strain toward the tip. The strain--distance profiles (Figure\ref{fig:fig8}b) show elevated strain extending farther radially in the top region than in deeper regions, while the heatmap (Figure\ref{fig:fig8}d) and regional analysis (Figure\ref{fig:fig8}e) confirm greater strain near the cortical surface. Together, these results show that implant geometry determines where strain localizes, how broadly it spreads, and which tissue regions bear the greatest mechanical burden.
+
+This spatial organization provides a mechanical framework for interpreting well-established \textit{in vivo} patterns of peri-implant pathology. Biran et al.\ (2005)\cite{Biran2005}showed that chronically implanted silicon microelectrode arrays produced a dense ring of ED1-positive activated macrophage/microglia immediately adjacent to the implant, accompanied by significant neuronal depletion within roughly 100--150~$\mu\mathrm{m}$ of the interface, while reactive astrocytosis extended farther into surrounding tissue. Winslow and Tresco (2010)\cite{Winslow2010}quantified this response radially and showed that GFAP and microglial activation were maximally closest to the electrode surface and decayed sharply with distance, with neuronal density inversely following this inflammatory gradient. Thelin et al.\ (2011)\cite{Thelin2011}further resolved this profile by examining both distance from the implant and position along the implant track, reporting that inflammatory markers (GFAP, ED1) and neuronal loss (NeuN) varied spatially along the shank and at the tip, suggesting that biological injury is regionally heterogeneous rather than uniformly distributed. Prior studies defined the biological gradient; our work resolves its mechanical architecture. Short, wide implants create deep focal strain hotspots near the penetrating tip, whereas long, slender geometries shift the dominant loading zone toward the cortical entry region and distribute deformation over a broader axial length. This introduces a geometry-dependent mechanical basis for where neuroinflammation concentrates along the implant track, extending the field's view from radial decay around a generic implant to implant-specific spatial patterns of tissue loading dictated by device architecture.
+
+
+\subsection{From Mechanical Mismatch to Geometry-Driven Design of Neural Interfaces}
+
+Prior work established that chronic failure of intracortical microelectrodes is driven, in part, by the mechanical consequences of brain micromotion. Early histological studies by Szarowski et al.\cite{Szarowski2003}, Biran et al.\cite{Biran2005}, Seymour and Kipke\cite{Seymour2007}, and Stice and Muthuswamy\cite{Stice2009} linked implant movement to neuronal loss, reactive gliosis, and long-term recording instability, identifying micromotion as a major pathological driver at the brain--implant interface. Gilletti and Muthuswamy\cite{Gilletti2006} later quantified the scale of this mechanical input, showing that respiration and vascular pulsation generate persistent micron-scale tissue displacement in vivo. Computational studies by Subbaroyan et al.\cite{Subbaroyan2005}, Polanco et al.\cite{Polanco2012}, Al Abed et al.\cite{AlAbed2022}, and Sharbatian et al.\cite{Sharbatian2025} subsequently demonstrated that micromotion amplitude, probe stiffness, and material compliance shape peri-implant strain fields, while in vitro work by Karumbaiah et al.\cite{Karumbaiah2012} and Spencer et al.\cite{Spencer2017} showed that cyclic strain directly activates astrocytes and microglia. Together, these studies established the mechanobiological sequence underlying chronic interface failure: physiological motion generates strain, strain activates inflammatory biology, and inflammation can contribute to degradation of device function.
+
+The present work extends this framework by examining how implant architecture modulates the translation of imposed micromotion into tissue strain. Rather than acting independently, width, thickness, length, material modulus, and displacement exhibited coupled effects on the predicted strain response. Micromotion displacement defined the loading magnitude, while probe width and length substantially influenced the resulting strain distribution and modified the effect of material stiffness. Importantly, the influence of material modulus was dependent on both geometry and displacement. For long probes, increased stiffness was associated with reduced strain under the low-displacement condition ($D = 1~\mu\text{m}$); however, this trend was not maintained at the higher displacement condition ($D = 50~\mu\text{m}$), where strain increased slightly with stiffness. Thus, the present results do not support a universal relationship between increased stiffness and reduced tissue strain. Instead, they indicate that the mechanical effect of material compliance is conditional on the surrounding geometric and loading conditions, highlighting the importance of considering interactions among design parameters rather than treating stiffness as an independent design variable.
+
+These observations are broadly consistent with classical mechanics. The substantial influence of width may reflect increased implant--tissue contact and associated load transfer, whereby changes in contact geometry alter the distribution of deformation within the surrounding tissue. Likewise, probe length can modify how applied motion is distributed along the implant--tissue interface, thereby changing local strain concentrations and the apparent sensitivity to material stiffness. The effects of width and thickness should therefore be interpreted within the specific loading direction and boundary conditions used in the present model. In particular, because flexural rigidity depends strongly on the orientation of the cross-section relative to the applied displacement, direct comparison with Euler--Bernoulli beam scaling requires consideration of the imposed bending direction. Overall, the results suggest that intracortical implants behave as coupled implant--tissue mechanical systems in which geometry, material properties, and micromotion jointly determine the resulting strain field.
+Accordingly, the present results support conditional rather than universal design recommendations. Within the investigated parameter space, increasing probe width produced a substantially greater strain increase for short probes ($L=1~\mathrm{mm}$) than for long probes ($L=5~\mathrm{mm}$), consistent with the significant Length $\times$ Width interaction. Increasing thickness likewise produced a larger strain increase for short than for long probes. The effect of shank length also depended on micromotion amplitude, with longer probes showing the greatest strain reduction relative to short probes under the low-displacement condition ($D=1~\mu\mathrm{m}$). Material stiffness was similarly conditional on geometry: increasing modulus increased strain for short probes but slightly decreased strain for long probes. Trends involving Width $\times$ Displacement ($P=0.054$), Width $\times$ Modulus ($P=0.0647$), and Length $\times$ Modulus $\times$ Displacement ($P=0.0594$) did not reach statistical significance and are therefore interpreted descriptively. These findings indicate that probe dimensions and material properties should be optimized jointly for the expected geometric configuration and micromotion condition rather than treated as independent, universally favorable design parameters.
+\subsection{Limitations of the study}
+
+This study has several limitations. Brain tissue was modeled as an isotropic, linearly elastic medium, whereas native brain exhibits viscoelastic, nonlinear, and regionally anisotropic behavior shaped by axonal organization, vascular architecture, and heterogeneous extracellular composition. The simulations also considered static displacement loading, which does not fully capture the cyclic nature of physiological micromotion arising from respiration, vascular pulsatility, and head movement, nor the cumulative effects of repeated loading, including stress relaxation and progressive tissue remodeling. A limitation of the present FEM framework is the use of a linear elastic formulation with geometric nonlinearity disabled. Although this approach enabled systematic comparison across the full-factorial design space. Some conditions produced large localized equivalent deviatoric strain values outside the range conventionally associated with infinitesimal-strain kinematics. The primary conclusions of the present analysis therefore concern relative changes in strain across geometric, material, and micromotion conditions. Future studies incorporating geometric nonlinearity and finite-strain tissue formulations will be required to quantitatively evaluate these high-deformation conditions. In addition, experimental validation in physiologically relevant \textit{in vitro} systems and chronic \textit{in vivo} models will be necessary to confirm the predicted strain distributions and their relationship to neuroimmune activation.
+
+These limitations primarily affect the absolute magnitude of predicted strain, but are unlikely to alter the relative mechanical relationships identified here. The dominant influence of probe width, the strain-buffering role of shank length, the geometry-dependent effect of material modulus, and the protective effect of cross-sectional symmetry arise from first-order principles of interfacial shear transfer, load redistribution, and structural mechanics that remain robust across constitutive models. Importantly, the predicted spatial localization and radial decay of strain closely parallel prior \textit{in vivo} observations of peri-implant inflammation, neuronal depletion, and regional tissue remodeling. Viewed in this context, the present model serves as a mechanistic design framework that isolates the governing structural variables controlling strain transmission at the brain--implant interface and provides quantitative design rules for the rational development of chronically stable neural interfaces.
+
+\section{Conclusion}
+
+The long-term performance of intracortical microelectrodes depends fundamentally on how implant architecture shapes the mechanical environment at the brain--implant interface. Using a systematic design-of-experiments framework coupled with finite element modeling, this study defines the relative and interactive contributions of probe length, width, thickness, material modulus, and micromotion displacement to tissue strain. Across all parameters examined, micromotion displacement produced the largest estimated main-effect change across the investigated range, while probe geometry determined how efficiently that motion was converted into tissue deformation. Among geometric factors, both probe width and thickness significantly influenced strain, with the estimated main-effect change being numerically larger for width than for thickness; however, these two effect magnitudes were not directly compared statistically. Increasing probe width produced a substantially greater strain increase for short probes ($L=1~\mathrm{mm}$) than for long probes ($L=5~\mathrm{mm}$), whereas increased shank length produced its greatest strain reduction relative to short probes under the low-displacement condition ($D=1~\mu\mathrm{m}$). Thickness and material modulus influenced strain in a strongly geometry-dependent manner, with their mechanical effects emerging primarily through interactions with width, length, and displacement rather than as independent determinants.
+
+Several broader design principles emerge from this work. Within the investigated parameter space, the mechanical benefit of narrower probes depended on shank length, with increasing width producing a substantially larger strain increase for short probes than for long probes; similarly, the strain-buffering effect of longer shanks was most pronounced under the low-displacement condition ($D=1~\mu\mathrm{m}$). Balanced cross-sectional geometries also influenced directional strain concentration, although these effects depended on the surrounding geometric and loading conditions. Material compliance, long regarded as a primary strategy for reducing mechanical mismatch, was found to be context dependent, with its protective effect strongly conditioned by implant geometry and loading condition, and, in some long architectures, increased stiffness reducing rather than increasing tissue strain. These findings reposition geometry, material properties, and micromotion as interacting regulators of implant--tissue mechanical coupling and support conditional rather than universal design recommendations.
+
+\section*{Data Availability }
+
+The data associated with this study are publicly available on GitHub at
+\href{https://github.com/DekuLabUO/Neural-Probe-Strain}{DekuLabUO/Neural-Probe-Strain}.
+
+\section*{Funding}
+
+This work was supported by the National Institutes of Health (NIH), National Institute of Neurological Disorders and Stroke (NINDS), under Grant No.~1R01NS136987-01.
+
+%\bibliographystyle{plain}  % IOP numeric style
+\bibliography{reffinal}             % refs.bib must be in the same folder\\
+
+\end{document}

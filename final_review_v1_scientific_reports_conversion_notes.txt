@@ -1,0 +1,36 @@
+Scientific Reports DOCX conversion audit
+===========================================
+
+Output
+------
+DOCX: C:\Users\e0891832\GitHub\gpt5.5\final_review_v1_scientific_reports.docx
+Source TeX (unchanged): C:\Users\e0891832\GitHub\gpt5.5\final_review_v1.tex
+
+Preserved
+---------
+- Native Word headings, editable tables, and editable Word equations.
+- Page numbers and continuous line numbers for review.
+- All 86 unique citation keys, mapped to numerical citations in first-use order.
+- Eight inline figures and their original legends.
+
+Source dependencies not supplied
+--------------------------------
+- reffinal.bib is absent. The References section therefore contains numbered BibTeX-key placeholders. Replace these with full Nature-style entries before submission.
+- The eight figure files named by the TeX are absent. Figures 1-6 were recovered from the authors' public data repository.
+- Figures 7-8 were reconstructed from the matching public data panels. Panel (c), described in each source legend, was not present in the supplied files or public repository and is explicitly marked as unavailable.
+
+Required author input
+---------------------
+- Complete the highlighted Author Contributions statement.
+- Complete the highlighted Competing Interests statement.
+
+Scientific Reports guideline checks (26 August 2026)
+----------------------------------------------------
+- Title: 10 words (recommended maximum: 20).
+- Abstract: 303 words (recommended maximum: 200).
+- Main text excluding Methods, references, tables, and figure legends: approximately 6519 words (recommended maximum: 4,500).
+- Keywords: 6 (maximum allowed: 6).
+- Display items: 8 figures + 3 tables = 11 (journal limit stated as 8).
+- Unique references: 86 (journal recommends about 60, though not strictly enforced).
+
+No scientific prose, numerical results, or source tables were silently shortened to meet these limits.
